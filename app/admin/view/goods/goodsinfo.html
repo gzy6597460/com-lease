@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="__PUBLIC__/font-awesome/css/font-awesome.min.css" media="all"/>
+    <link rel="stylesheet" href="__CSS__/admin.css" media="all">
+    <style type="text/css">
+
+        /* tooltip */
+        #tooltip {
+            position: absolute;
+            border: 1px solid #ccc;
+            background: #333;
+            padding: 2px;
+            display: none;
+            color: #fff;
+        }
+    </style>
+</head>
+<body style="padding:10px;">
+<div class="tplay-body-div">
+
+    <!--<form class="layui-form serch" action="{:url('admin/order/index')}" method="post">-->
+    <!--<div class="layui-form-item" style="float: left;">-->
+    <!--<div class="layui-input-inline">-->
+    <!--<input type="text" name="keywords" lay-verify="title" autocomplete="off" placeholder="请输入关键词"-->
+    <!--class="layui-input layui-btn-sm">-->
+    <!--</div>-->
+
+    <!--<div class="layui-input-inline">-->
+    <!--<div class="layui-inline">-->
+    <!--<select name="admin_id" lay-search="">-->
+    <!--<option value="">创建人</option>-->
+
+    <!--</select>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="layui-input-inline">-->
+    <!--<div class="layui-inline">-->
+    <!--<div class="layui-input-inline">-->
+    <!--<input type="text" class="layui-input" id="create_time" placeholder="创建时间" name="create_time">-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<button class="layui-btn layui-btn-danger layui-btn-sm" lay-submit="" lay-filter="serch">立即提交</button>-->
+    <!--</div>-->
+    <!--</form>-->
+
+    <form class="layui-form layui-form-pane" action="{:url()}" method="post">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>商品信息</legend>
+        </fieldset>
+        <div class="layui-form-item">
+            <input type="hidden" name="id" autocomplete="off" placeholder="订单id" class="layui-input layui-bg-gray"
+                   value="{$data_info.id}">
+            <label class="layui-form-label">商品编号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="goods_num" autocomplete="off" placeholder="商品编号"
+                       class="layui-input" value="{$data_info.goods_num}">
+            </div>
+            <label class="layui-form-label">是否上架</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" checked="" name="is_onshelf" lay-skin="switch" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="goods_name" lay-verify="required" placeholder="商品名称" autocomplete="off"
+                       class="layui-input " value="{$data_info.goods_name}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品品牌</label>
+            <div class="layui-input-inline">
+                <input type="text" name="goods_brand" lay-verify="required" placeholder="商品品牌" autocomplete="off"
+                       class="layui-input" value="{$data_info.goods_brand}" >
+            </div>
+            <label class="layui-form-label">系列</label>
+            <div class="layui-input-inline">
+                <select name="series_id" lay-filter="status">
+                    <option value="{$data_info.series_id}">{$data_info.series_name}</option>
+                    {volist name="$series_list" id="vo"}
+                    <option value="{$vo.id}">{$vo.series_name}</option>
+                    {/volist}
+                </select>
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">参数配置</label>
+            <div class="layui-input-block">
+                <input type="text" name="parameter" lay-verify="required" placeholder="参数配置" autocomplete="off"
+                       class="layui-input " value="{$data_info.parameter}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">参考价格￥</label>
+            <div class="layui-input-inline">
+                <input type="text" name="reference_price" lay-verify="required" placeholder="商品参考价格" autocomplete="off"
+                       class="layui-input " value="{$data_info.reference_price}">
+            </div>
+            <label class="layui-form-label">日租金最低</label>
+            <div class="layui-input-inline">
+                <input type="text" name="minimum_price" lay-verify="required" placeholder="租金每日可低至" autocomplete="off"
+                       class="layui-input " value="{$data_info.minimum_price}">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品图片</label>
+            <div class="layui-input-block">
+                <input type="text" name="goods_path" placeholder="填写图片地址" autocomplete="off"
+                       class="layui-input " value="{$data_info.goods_path}">
+            </div>
+
+        </div>
+
+        <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+            预览图：
+            <img src="{$data_info.goods_path}">
+        </blockquote>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">详情页</label>
+            <div class="layui-input-block">
+                <input type="text" name="goods_path" placeholder="填写图片地址" autocomplete="off"
+                       class="layui-input " value="{$data_info.good_pic}">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea name="remark" placeholder="请输入内容" class="layui-textarea">{$data_info.remark}</textarea>
+            </div>
+        </div>
+
+        <!--<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">-->
+            <!--<legend>商品套餐</legend>-->
+        <!--</fieldset>-->
+        <!--{volist name="$data_info.meal" id="vo"}-->
+        <!--<fieldset class="layui-elem-field">-->
+            <!--<legend>套餐{$i}</legend>-->
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">套餐名称</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="{$i}meal_name" lay-verify="required" placeholder="套餐名称" autocomplete="off"-->
+                           <!--class="layui-input " value="{$vo.meal_name}">-->
+                <!--</div>-->
+                <!--<label class="layui-form-label">租赁天数</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="{$i}meal_days" lay-verify="required" placeholder="租赁天数" autocomplete="off"-->
+                           <!--class="layui-input " value="{$vo.meal_days}">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">参数</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="{$i}meal_param" lay-verify="required" placeholder="参数" autocomplete="off"-->
+                           <!--class="layui-input " value="{$vo.meal_param}">-->
+                <!--</div>-->
+
+            <!--</div>-->
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">租赁月数</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="{$i}meal_months" lay-verify="required" placeholder="租赁月数" autocomplete="off"-->
+                           <!--class="layui-input " value="{$vo.meal_months}">-->
+                <!--</div>-->
+                <!--<label class="layui-form-label">折扣</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="{$i}meal_discount" lay-verify="required" placeholder="折扣" autocomplete="off"-->
+                           <!--class="layui-input " value="{$vo.meal_discount}">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">保价保损险</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="{$i}insurance_cost" lay-verify="required" placeholder="保价保损险（一次性费用）" autocomplete="off"-->
+                           <!--class="layui-input " value="{$vo.insurance_cost}">-->
+                <!--</div>-->
+                <!--<label class="layui-form-label">终身服务费</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="{$i}service_cost" lay-verify="required" placeholder="终身租赁服务费（一次性收费）" autocomplete="off"-->
+                           <!--class="layui-input " value="{$vo.service_cost}">-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">套餐租金</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="meal_price" lay-verify="required" placeholder="套餐租金" autocomplete="off"-->
+                           <!--class="layui-input " value="{$vo.meal_price}">-->
+                <!--</div>-->
+                <!--<label class="layui-form-label">总金额</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="total_price" lay-verify="required" placeholder="租赁月数" autocomplete="off"-->
+                           <!--class="layui-input " value="{$vo.total_price}">-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</fieldset>-->
+
+        <!--{/volist}-->
+        <!--<fieldset class="layui-elem-field">-->
+            <!--<legend>套餐{$i+1}</legend>-->
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">套餐名称</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="meal_name"  placeholder="优惠套餐x【xxx】" autocomplete="off"-->
+                           <!--class="layui-input " value="">-->
+                <!--</div>-->
+                <!--<label class="layui-form-label">租赁天数</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="meal_days" placeholder="xxx天租赁" autocomplete="off"-->
+                           <!--class="layui-input " value="">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">参数</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="meal_param" placeholder="参数" autocomplete="off"-->
+                           <!--class="layui-input " value="">-->
+                <!--</div>-->
+
+            <!--</div>-->
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">租赁月数</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="meal_months"  placeholder="租赁月数" autocomplete="off"-->
+                           <!--class="layui-input " value="">-->
+                <!--</div>-->
+                <!--<label class="layui-form-label">折扣</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="meal_discount" placeholder="折扣" autocomplete="off"-->
+                           <!--class="layui-input " value="">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">保价保损险</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="insurance_cost" placeholder="保价保损险（一次性费用）" autocomplete="off"-->
+                           <!--class="layui-input " value="">-->
+                <!--</div>-->
+                <!--<label class="layui-form-label">终身服务费</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="service_cost" placeholder="终身租赁服务费（一次性收费）" autocomplete="off"-->
+                           <!--class="layui-input " value="">-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">套餐租金</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="meal_price"  placeholder="套餐租金" autocomplete="off"-->
+                           <!--class="layui-input " value="">-->
+                <!--</div>-->
+                <!--<label class="layui-form-label">总金额</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="total_price" placeholder="租赁月数" autocomplete="off"-->
+                           <!--class="layui-input " value="">-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</fieldset>-->
+
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit="" lay-filter="demo2">保存</button>
+        </div>
+    </form>
+    {include file="public/foot"}
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+
+            //监听提交
+            form.on('submit(demo2)', function(data){
+                //layer.msg(JSON.stringify(data.field));
+
+                $.ajax({
+                    type: 'POST',
+                    dataType:'json',
+                    data: data.field,
+                    url:"{:url()}",
+                    success:function(data){
+                        if(data.success == true){
+                            layer.msg(data.message);
+                            var index = parent.layer.getFrameIndex(window.name);
+                            setTimeout(function(){
+                                parent.layer.close(index);//关闭弹出层
+                                parent.location.reload();//更新父级页面（提示：如果需要跳转到其它页面见下文）
+                            }, 2000);
+                        }else if(data.success == false){
+                            layer.msg(data.message,{
+                                anim:6
+                            });
+                        }else{
+                            layer.msg('请求异常',{
+                                anim:6
+                            });
+                        }
+                        layer.closeAll('iframe');//关闭弹窗
+                    }
+                });
+                return false;
+            });
+
+            var ins22 = laydate.render({
+                elem: '#date1'
+                , min: '2018-01-01'
+                , max: '2099-01-01'
+                , ready: function () {
+                    ins22.hint('日期可选值设定在 <br> 2018-01-01 到 2099-01-01');
+                }
+            });
+            laydate.render({
+                elem: '#date2'
+            });
+            laydate.render({
+                elem: '#date3'
+                , type: 'datetime'
+                , min: '2018-01-01 00:00:00'
+                , max: '2099-01-01 00:00:00'
+            });
+            laydate.render({
+                elem: '#date4'
+                , type: 'datetime'
+                , min: '2018-01-01 00:00:00'
+                , max: '2099-01-01 00:00:00'
+            });
+            laydate.render({
+                elem: '#date5'
+            });
+        });
+    </script>
+</div>
+</body>
+</html>

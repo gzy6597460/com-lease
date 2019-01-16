@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="__PUBLIC__/font-awesome/css/font-awesome.min.css" media="all"/>
+    <link rel="stylesheet" href="__CSS__/admin.css" media="all">
+    <style type="text/css">
+
+        /* tooltip */
+        #tooltip {
+            position: absolute;
+            border: 1px solid #ccc;
+            background: #333;
+            padding: 2px;
+            display: none;
+            color: #fff;
+        }
+    </style>
+</head>
+<body style="padding:10px;">
+<div class="tplay-body-div">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">订单管理</li>
+            <!--<li><a href="{:url()}" class="a_menu">订单详情</a></li>-->
+        </ul>
+    </div>
+    <form class="layui-form serch" action="{:url()}" method="post">
+        <div class="layui-form-item" style="float: left;">
+            <div class="layui-input-inline">
+                <input type="text" name="inside_order_no" lay-verify="title" autocomplete="off" placeholder="请输入订单号"
+                       class="layui-input layui-btn-sm">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="buy_name" lay-verify="title" autocomplete="off" placeholder="请输入收货人"
+                       class="layui-input layui-btn-sm">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="goods_name" lay-verify="title" autocomplete="off" placeholder="请输入商品名称"
+                       class="layui-input layui-btn-sm">
+            </div>
+            <div class="layui-input-inline">
+                <div class="layui-inline">
+                    <select name="status" lay-search="">
+                        <option value="">订单状态</option>
+                        {volist name="$info.status" id="vo"}
+                        <option value="{$vo.status}">{$vo.status}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <div class="layui-inline">
+                    <select name="order_type" lay-search="">
+                        <option value="">订单类型</option>
+                        {volist name="$info.type" id="vo"}
+                        <option value="{$vo.order_type}">{$vo.order_type}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <div class="layui-inline">
+                    <select name="lease_months" lay-search="">
+                        <option value="">租赁月数</option>
+                        {volist name="$info.lease_months" id="vo"}
+                        <option value="{$vo.lease_months}">{$vo.lease_months}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <!--<div class="layui-input-inline">-->
+            <!--<div class="layui-inline">-->
+            <!--<select name="admin_id" lay-search="">-->
+            <!--<option value="">创建人</option>-->
+            <!--</select>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="layui-input-inline">
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="create_time" placeholder="创建时间" name="create_time">
+                    </div>
+                </div>
+            </div>
+            <button class="layui-btn layui-btn layui-btn-sm" lay-submit="" lay-filter="serch">查询</button>
+            <!--<button class="layui-btn layui-btn layui-btn-sm" lay-submit="" lay-filter="serch">导出excel</button>-->
+            <a class="layui-btn layui-btn layui-btn-sm " href="{:url('admin/order/out2excel')}" target="_blank">导出excel</a>
+
+        </div>
+    </form>
+    <hr class="layui-bg-green">
+    <table class="layui-table" lay-size="sm" style="text-align:center;">
+        <colgroup>
+            <col width="50">
+            <col width="130">
+            <col width="80">
+            <col width="100">
+            <col width="100">
+            <col width="100">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="100">
+        </colgroup>
+        <thead>
+        <tr>
+            <th style="text-align:center;">ID</th>
+            <th style="text-align:center;">订单号</th>
+            <th style="text-align:center;">订单状态</th>
+            <th style="text-align:center;">收货人</th>
+            <th style="text-align:center;">收货电话</th>
+            <th style="text-align:center;">商品名称</th>
+            <th style="text-align:center;">租赁数量</th>
+            <th style="text-align:center;">租赁月数</th>
+            <th style="text-align:center;">订单金额</th>
+            <th style="text-align:center;">实际支付</th>
+            <th style="text-align:center;">积分抵扣</th>
+            <th style="text-align:center;">创建时间</th>
+            <th style="text-align:center;">订单类型</th>
+            <th style="text-align:center;">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="order" id="vo"}
+        <tr>
+            <td>{$vo.id}</td>
+            <td>{$vo.inside_order_no}</td>
+            <td>{$vo.status}</td>
+            <td>{$vo.buy_name}</td>
+            <td>{$vo.phone}</td>
+            <td>{$vo.goods.goods_name}</td>
+            <td>{$vo.buy_num}</td>
+            <td>{$vo.lease_months}</td>
+            <td>￥{$vo.total_fee/100}</td>
+            <td>￥{$vo.real_pay/100}</td>
+            <td>{$vo.deduction_score}</td>
+            <td>{$vo.create_time}</td>
+            <td>{$vo.order_type}</td>
+            <td class="operation-menu">
+                <div class="layui-btn-group">
+                    <button class="layui-btn layui-btn-primary layui-btn-small todetail" value="{$vo['id']}"><i
+                            class="layui-icon"></i></button>
+                    <!--<button class="layui-btn layui-btn-primary layui-btn-small toedit" value="{$vo['id']}"><i-->
+                    <!--class="layui-icon"></i></button>-->
+                    <!--<a href="{:url('admin/order/orderinfo',['id'=>$vo.id])}"-->
+                    <!--class="layui-btn layui-btn-xs a_menu layui-btn-primary"-->
+                    <!--style="margin-right: 0;font-size:12px;"><i class="layui-icon"></i></a>-->
+                    <!--<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-primary delete" id="{$vo.id}"-->
+                    <!--style="margin-right: 0;font-size:12px;"><i class="layui-icon"></i></a>-->
+                </div>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div style="padding:0 20px;">{$order->render()}</div>
+    {include file="public/foot"}
+    <script type="text/javascript">
+        // $('.delete').click(function () {
+        //     var id = $(this).attr('id');
+        //     layer.confirm('确定要删除?', function (index) {
+        //         $.ajax({
+        //             url: "{:url('admin/article/delete')}",
+        //             data: {id: id},
+        //             success: function (res) {
+        //                 layer.msg(res.msg);
+        //                 if (res.code == 1) {
+        //                     setTimeout(function () {
+        //                         location.href = res.url;
+        //                     }, 1500)
+        //                 }
+        //             }
+        //         })
+        //     })
+        // })
+        // $('.outexcel').click(function () {
+        //     var list = {excel_list};
+        //     layer.confirm('确定导出excel?', function (index) {
+        //         $.ajax({
+        //             type: "post",
+        //             url: "{:url('admin/order/out2excel')}",
+        //             data: {list},
+        //             success: function (res) {
+        //                 layer.msg(res.msg);
+        //                 if (res.code == 1) {
+        //                     setTimeout(function () {
+        //                         location.href = res.url;
+        //                     }, 1500)
+        //                 }
+        //             }
+        //         })
+        //     })
+        // })
+
+
+    </script>
+    <script type="text/javascript">
+
+        $('.is_top').click(function () {
+            var val = $(this).attr('data-val');
+            var id = $(this).attr('data-id');
+            var i = $(this).find('i');
+            var the = $(this);
+            if (val == 1) {
+                var is_top = 0;
+            } else {
+                var is_top = 1;
+            }
+            $.ajax({
+                type: "post",
+                url: "{:url('admin/article/is_top')}",
+                data: {is_top: is_top, id: id},
+                success: function (res) {
+
+                    if (res.code == 1) {
+                        top();
+                    } else {
+                        layer.msg(res.msg);
+                    }
+                }
+            })
+
+            function top() {
+                if (val == 1) {
+                    i.attr("class", "fa fa-toggle-off");
+                    the.attr('data-val', 0);
+                } else {
+                    i.attr("class", "fa fa-toggle-on");
+                    the.attr('data-val', 1);
+                }
+            }
+        })
+
+
+        $('.status').click(function () {
+            var val = $(this).attr('data-val');
+            var id = $(this).attr('data-id');
+            var i = $(this).find('i');
+            var the = $(this);
+            if (val == 1) {
+                var status = 0;
+            } else {
+                var status = 1;
+            }
+            $.ajax({
+                type: "post",
+                url: "{:url('admin/article/status')}",
+                data: {status: status, id: id},
+                success: function (res) {
+
+                    if (res.code == 1) {
+                        tostatus();
+                    } else {
+                        layer.msg(res.msg);
+                    }
+                }
+            })
+
+            function tostatus() {
+                if (val == 1) {
+                    i.attr("class", "fa fa-toggle-off");
+                    the.attr('data-val', 0);
+                } else {
+                    i.attr("class", "fa fa-toggle-on");
+                    the.attr('data-val', 1);
+                }
+            }
+        })
+    </script>
+    <script>
+        layui.use('layer', function () { //独立版的layer无需执行这一句
+            var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+            //弹出一个iframe层
+            $('.todetail').on('click', function () {
+                var id = $(this).val();
+                layer.open({
+                    type: 2,
+                    title: '订单信息',
+                    maxmin: true,
+                    shadeClose: true, //点击遮罩关闭层
+                    area: ['900px', '600px'],
+                    content: "http://admin.91xzq.com/admin/order/orderinfo?id=" + id
+                });
+            });
+        });
+    </script>
+
+</div>
+</body>
+</html>

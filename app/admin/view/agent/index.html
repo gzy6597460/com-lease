@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="__PUBLIC__/font-awesome/css/font-awesome.min.css" media="all" />
+    <link rel="stylesheet" href="__CSS__/admin.css" media="all">
+    <style type="text/css">
+        /* tooltip */
+
+        #tooltip {
+            position: absolute;
+            border: 1px solid #ccc;
+            background: #333;
+            padding: 2px;
+            display: none;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body style="padding:10px;">
+    <div class="tplay-body-div">
+        <div class="layui-tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">代理商管理</li>
+                <li>
+                    <a href="{:url('admin/member/add_member')}" class="a_menu">新增代理商</a>
+                </li>
+            </ul>
+        </div>
+        <div class="demoTable">
+
+            <div class="layui-input-inline">
+                <input type="text" name="id" placeholder="ID" class="layui-input layui-btn-sm" id="reloadId">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="memberID" placeholder="memberID" class="layui-input layui-btn-sm" id="reloadMemberid">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="name" placeholder="昵称" class="layui-input layui-btn-sm" id="reloadName">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="nick_name" placeholder="姓名" class="layui-input layui-btn-sm" id="reloadNick">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="mobile" placeholder="手机号码" class="layui-input layui-btn-sm" id="reloadMobile">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="date1" placeholder="注册时间" name="create_time" autocomplete="off">
+            </div>
+            <button class="layui-btn" data-type="reload">搜索</button>
+
+        </div>
+        <div class="demoTable">
+            <div class="layui-form-item" style="float: left;">
+                <div class="layui-inline">
+                    <div class="layui-btn-group demoTable">
+                        <button class="layui-btn" data-type="getCheckData">查看详情</button>
+                        <button class="layui-btn" data-type="getCheckLength">获取选中数目</button>
+                        <button class="layui-btn" data-type="isAll">验证是否全选</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table class="layui-table" id="LAY_table_user" lay-filter="user"></table>
+        <script src="__PUBLIC__/layui/layui.js" charset="utf-8"></script>
+        <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+        <script>
+            layui.use([ 'layedit', 'laydate', 'table'], function () {
+                var layer = layui.layer
+                    , layedit = layui.layedit
+                    , laydate = layui.laydate
+                    , table = layui.table;
+
+                //日期
+                laydate.render({
+                    elem: '#date1'
+                });
+
+
+                //方法级渲染
+                table.render({
+                    elem: '#LAY_table_user'
+                    , url: "{:url('admin/agent/agent_list')}"
+                    , cols: [[
+                        { checkbox: true, fixed: true }
+                        , { field: 'id', title: 'ID', sort: true, fixed: true }
+                        , { field: 'out_trade_no', title: '订单号', sort: true }
+                        , { field: 'create_time', title: '创建时间', sort: true }
+                        , { field: 'order_type', title: '订单类型', sort: true }
+                        , { field: 'status', title: '订单状态', sort: true }
+                        , { field: 'member_id', title: '用户id' }
+                        , { field: 'buy_name', title: '用户姓名' }
+                        , { field: 'phone', title: '电话' }
+                        , { field: 'goods_id', title: '商品id' }
+                        , { field: '', title: '商品名称' }
+                        , { field: 'buy_num', title: '购买数量' }
+                        , { field: 'lease_months', title: '租赁月数' }
+                        , { field: 'create_time', title: '注册时间', sort: true }
+                    ]]
+                    , id: 'testReload'
+                    , page: true
+                    , height: 'full-200 '
+                });
+
+                
+
+                var $ = layui.$, active = {
+                    reload: function () {
+                        var id = $('#reloadId').val();
+                        var memberID = $('#reloadMemberid').val();
+                        var name = $('#reloadName').val();
+                        var nick_name = $('#reloadNick').val();
+                        var mobile = $('#reloadMobile').val();
+                        var create_time = $('#date1').val();
+                        // layer.msg("搜索中…");
+                        layer.msg(create_time);
+                        //执行重载
+                        table.reload('testReload', {
+                            url: "{:url('admin/agent/agent_list')}?id=" + id + "&memberID=" + memberID + "&name=" + name + "&nick_name=" + nick_name + "&mobile=" + mobile + "&create_time=" + create_time,
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        });
+                    }
+                    ,getCheckData: function () { //获取选中数据
+                        var checkStatus = table.checkStatus('testReload')
+                            , data = checkStatus.data;
+                        layer.alert(JSON.stringify(data));
+                    }
+                    , getCheckLength: function () { //获取选中数目
+                        var checkStatus = table.checkStatus('testReload')
+                            , data = checkStatus.data;
+                        layer.msg('选中了：' + data.length + ' 个');
+                    }
+                    , isAll: function () { //验证是否全选
+                        var checkStatus = table.checkStatus('testReload');
+                        layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                    }
+                };
+
+                $('.demoTable .layui-btn').on('click', function () {
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+
+            });
+        </script>
+    </div>
+</body>
+
+</html>
